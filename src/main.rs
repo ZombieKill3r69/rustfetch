@@ -1,11 +1,10 @@
-use sysinfo::{
-    // Components, Disks, 
-    System};
+use sysinfo::{System, Disks,};
+use std::path::Path;
 
 fn main() {
 
     let bytes_to_mib_divisor: u64 = 1024 * 1024;
-    let _bytes_to_gib_divisor: u64 = 1024 * 1024 * 1024;
+    let bytes_to_gib_divisor: u64 = 1024 * 1024 * 1024;
 
     let mut sys: System = System::new_all();
     sys.refresh_all();
@@ -16,17 +15,34 @@ fn main() {
     let architecture: String = System::cpu_arch();
     let kernal: String = System::kernel_version().unwrap_or("Unknown Kernel".to_string());
 
-    // CPU and GPU
-
     // Memory
     let memory_total: u64 = sys.total_memory() / bytes_to_mib_divisor; // Divides by a big number to
     let memory_used: u64 = sys.used_memory() / bytes_to_mib_divisor;   // convert from whatever to mebibytes
+
+    // Storage
+    let disk_info: (u64, u64) = get_disk_info();
+    let storage_used: u64 = disk_info.0 / bytes_to_gib_divisor;
+    let storage_total: u64 = disk_info.1 / bytes_to_gib_divisor;
 
     // Output
     println!("OS: {os_name} {os_version} {architecture}");
     println!("Kernal: {kernal}");
     println!("Memory: {memory_used}MiB / {memory_total}MiB");
-    println!("CPU: ");
-    println!("GPU: ");
-    println!("Locale: ");
+    println!("Storage: {storage_used}GiB / {storage_total}GiB");
+}
+
+fn get_disk_info() -> (u64, u64) {
+    let disks = Disks::new_with_refreshed_list();
+    let mut total_space: u64 = 0;
+    let mut used_space: u64 = 0;
+    
+    for disk in disks.list() {
+        if disk.mount_point() == Path::new("/") { // Check if diskis root
+            total_space = disk.total_space();
+            used_space = disk.total_space() - disk.available_space();
+            break; // We dont care about anything but root here so we stop
+        }
+    }
+    
+    (total_space, used_space) // Reutrn both values from one function for consiseness
 }
