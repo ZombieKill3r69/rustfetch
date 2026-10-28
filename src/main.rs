@@ -21,8 +21,8 @@ fn main() {
 
     // Storage
     let disk_info: (u64, u64) = get_disk_info();
-    let storage_used: u64 = disk_info.0 / bytes_to_gib_divisor;
-    let storage_total: u64 = disk_info.1 / bytes_to_gib_divisor;
+    let storage_used: u64 = disk_info.1 / bytes_to_gib_divisor;
+    let storage_total: u64 = disk_info.0 / bytes_to_gib_divisor;
 
     // Output
     println!("OS: {os_name} {os_version} {architecture}");
@@ -44,5 +44,5 @@ fn get_disk_info() -> (u64, u64) {
         }
     }
     
-    (total_space, used_space) // Reutrn both values from one function for consiseness
+    (total_space, used_space) // Return both values from one function for consiseness
 }
