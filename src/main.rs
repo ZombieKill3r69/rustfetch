@@ -1,6 +1,7 @@
 use std::path::Path;
 use uzers::{get_current_uid, get_user_by_uid,};
 use sysinfo::{System, Disks,};
+use hostname;
 
 fn main() {
 
@@ -12,15 +13,29 @@ fn main() {
 
     // Username
     let userinfo: uzers::User = get_user_by_uid(get_current_uid()).unwrap();
-    let username: &std::ffi::OsStr  = userinfo.name(); // Not in valid format for output
-    let username_str: &str = username.to_str().expect("Username contains invalid UTF-8"); // Convert to string
+    let username: String = userinfo.name()
+        .to_string_lossy()
+        .to_string();
+
+    // Hostname
+    let hostname: String = hostname::get()
+        .unwrap()
+        .to_string_lossy()
+        .to_string();
 
     // OS
-    let os_name: String = System::name().unwrap_or("Unknown OS".to_string());
-    let os_version: String = System::os_version().unwrap_or("Unknown Version".to_string());
-    let architecture: String = System::cpu_arch();
-    let kernal: String = System::kernel_version().unwrap_or("Unknown Kernel".to_string());
+    let os_name: String = System::name()
+        .unwrap_or("Unknown OS".to_string());
 
+    let os_version: String = System::os_version()
+        .unwrap_or("Unknown Version".to_string());
+
+    let architecture: String = System::cpu_arch();
+
+    let kernal: String = System::kernel_version()
+        .unwrap_or("Unknown Kernel".to_string());
+
+        
     // Memory
     let memory_total: u64 = sys.total_memory() / bytes_to_mib_divisor; // Divides by a big number to
     let memory_used: u64 = sys.used_memory() / bytes_to_mib_divisor;   // convert from whatever to mebibytes
@@ -31,7 +46,7 @@ fn main() {
     let storage_total: u64 = disk_info.0 / bytes_to_gib_divisor;
 
     // Output
-    println!("{username_str}@");
+    println!("{username}@{hostname}");
     println!("OS: {os_name} {os_version} {architecture}");
     println!("Kernal: {kernal}");
     println!("Memory: {memory_used}MiB / {memory_total}MiB");
