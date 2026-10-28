@@ -249,6 +249,7 @@ version = "0.1.0"
 dependencies = [
  "machine-info",
  "sysinfo 0.39.6",
+ "uzers",
 ]
 
 [[package]]
@@ -369,6 +370,16 @@ name = "unicode-ident"
 version = "1.0.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2c754d6c33795a1c324727428e5a7dedb5b06195f9890bdbcba760d3e246563"
+
+[[package]]
+name = "uzers"
+version = "0.12.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b8275fb1afee25b4111d2dc8b5c505dbbc4afd0b990cb96deb2d88bff8be18d"
+dependencies = [
+ "libc",
+ "log",
+]
 
 [[package]]
 name = "winapi"
