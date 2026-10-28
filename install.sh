@@ -5,12 +5,12 @@ echo "Downloading rustfetch..."
 git clone https://github.com/ZombieKill3r69/rustfetch.git
 cd rustfetch
 
-echo "Comiling..."
+echo "Compiling..."
 cargo build --release
 
 echo "Installing..."
-cp target/release/rustfetch /usr/local/bin/
+sudo cp target/release/rustfetch /usr/local/bin/
 
 echo "Rustfetch has been installed successfully"
-echo "Run "Rustfetch" to use it"
+echo "Run 'rustfetch' to use it"
 echo "Happy fetching!"
