@@ -1,5 +1,6 @@
-use sysinfo::{System, Disks,};
 use std::path::Path;
+use uzers::{get_current_uid, get_user_by_uid,};
+use sysinfo::{System, Disks,};
 
 fn main() {
 
@@ -8,6 +9,11 @@ fn main() {
 
     let mut sys: System = System::new_all();
     sys.refresh_all();
+
+    // Username
+    let userinfo: uzers::User = get_user_by_uid(get_current_uid()).unwrap();
+    let username: &std::ffi::OsStr  = userinfo.name(); // Not in valid format for output
+    let username_str = username.to_str().expect("Username contains invalid UTF-8"); // Convert to string
 
     // OS
     let os_name: String = System::name().unwrap_or("Unknown OS".to_string());
@@ -25,6 +31,7 @@ fn main() {
     let storage_total: u64 = disk_info.0 / bytes_to_gib_divisor;
 
     // Output
+    println!("{username_str}");
     println!("OS: {os_name} {os_version} {architecture}");
     println!("Kernal: {kernal}");
     println!("Memory: {memory_used}MiB / {memory_total}MiB");
