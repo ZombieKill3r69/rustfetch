@@ -10,7 +10,7 @@ struct Info {
     os_name:        String,
     os_version:     String,
     arch:           String,
-    kernal:         String,
+    kernel:         String,
     memory_used:    u64,
     memory_total:   u64,
     storage_used:   u64,
@@ -26,73 +26,64 @@ fn main() {
 
     let mut sys: System = System::new_all();
     sys.refresh_all();
-
-    // Username
+    
     let userinfo: uzers::User = get_user_by_uid(get_current_uid()).unwrap();
-    let username: String = userinfo.name()
-        .to_string_lossy()
-        .to_string();
 
-    // Hostname
-    let host: String = hostname::get()
-        .unwrap()
-        .to_string_lossy()
-        .to_string();
+    // Add all the info to stuct for simple reference
+    let stats: Info = Info {
+        username: userinfo.name().to_string_lossy().to_string(),
+        host: hostname::get().unwrap().to_string_lossy().to_string(),
+        os_name: System::name().unwrap_or("Unknown OS".to_string()),
+        os_version: System::os_version().unwrap_or("Unknown Version".to_string()),
+        arch: System::cpu_arch(),
+        kernel: System::kernel_version().unwrap_or("Unknown Kernel".to_string()),
+        uptime: get_system_uptime(),
+        memory_used: sys.total_memory() / bytes_to_mib_divisor,
+        memory_total: sys.used_memory() / bytes_to_mib_divisor,
+        storage_used: get_disk_info().0 / bytes_to_gib_divisor,
+        storage_total: get_disk_info().1 / bytes_to_gib_divisor,
+    };
 
     // Line
     let line: String = std::iter::repeat(underline_char)
-        .take(format!("{username}@{host}")
+        .take(format!("{}@{}", stats.username, stats.host)
             .chars()
             .count())
         .collect();
-    
-    // OS
-    let os_name: String = System::name()
-        .unwrap_or("Unknown OS".to_string());
-    let os_version: String = System::os_version()
-        .unwrap_or("Unknown Version".to_string());
-    let architecture: String = System::cpu_arch();
-    let kernel: String = System::kernel_version()
-        .unwrap_or("Unknown Kernel".to_string());
-
-    // Memory
-    let memory_total: u64 = sys.total_memory() / bytes_to_mib_divisor; // Divides by a big number to
-    let memory_used: u64 = sys.used_memory() / bytes_to_mib_divisor;   // convert from whatever to mebibytes
-
-    // Uptime
-    let uptime_seconds: u64 = System::uptime();
-    let uptime: (u64, u64, u64) = (
-        uptime_seconds / 3600,
-        (uptime_seconds % 3600) / 60,
-        uptime_seconds % 60,
-    );
-
-    // Storage
-    let disk_info: (u64, u64) = {
-        let disks: Disks = Disks::new_with_refreshed_list();
-        let mut total_space: u64 = 0;
-        let mut used_space: u64 = 0;
-    
-        for disk in disks.list() {
-            if disk.mount_point() == Path::new("/") { // Check if diskis root
-                total_space = disk.total_space();
-                used_space = disk.total_space() - disk.available_space();
-                break; // We dont care about anything but root here so we stop
-            }
-        }
-    
-        (total_space, used_space) // Return both values from one function for consiseness
-    };
-    let storage_used: u64 = disk_info.1 / bytes_to_gib_divisor;
-    let storage_total: u64 = disk_info.0 / bytes_to_gib_divisor;
 
     // Output
     // Title line and line break
-    println!("{username}@{host}");
+    println!("{}@{}",stats.username ,stats.host);
     println!("{line}");
-    println!("Uptime: {}hours {}mins {}secs", uptime.0, uptime.1, uptime.2);
-    println!("OS: {os_name} {os_version} {architecture}");
-    println!("Kernel: {kernel}");
-    println!("Memory: {memory_used}MiB / {memory_total}MiB");
-    println!("Storage: {storage_used}GiB / {storage_total}GiB");
+    println!("Uptime: {}hours {}mins {}secs", stats.uptime.0, stats.uptime.1, stats.uptime.2);
+    println!("OS: {} {} {}",stats.os_name ,stats.os_version ,stats.arch);
+    println!("Kernel: {}", stats.kernel);
+    println!("Memory: {}MiB / {}MiB", stats.memory_used ,stats.memory_total);
+    println!("Storage: {}GiB / {}GiB", stats.storage_used, stats.storage_total);
+}
+
+fn get_system_uptime() -> (u64, u64, u64) {
+    let uptime_seconds: u64 = System::uptime(); 
+    
+    return (
+    uptime_seconds / 3600,         // Hours
+    (uptime_seconds % 3600) / 60,  // Mins
+    uptime_seconds % 60,           // Secs
+    );
+}
+
+fn get_disk_info() -> (u64, u64) {
+    let disks: Disks = Disks::new_with_refreshed_list();
+    let mut total_space: u64 = 0;
+    let mut used_space: u64 = 0;
+
+    for disk in disks.list() {
+        if disk.mount_point() == Path::new("/") { // Check if diskis root
+            total_space = disk.total_space();
+            used_space = disk.total_space() - disk.available_space();
+            break; // We dont care about anything but root here so we stop
+        }
+    }
+
+    (total_space, used_space) // Return both values from one function for consiseness
 }
