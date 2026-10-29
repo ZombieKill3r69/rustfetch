@@ -25,11 +25,11 @@ Rustfetch is a rust based neofetch-like program used to display system informati
 #### Automatic
 1. **Copy into terminal**
     ```bash
-    curl -sSL https://raw.githubusercontent.com/ZombieKill3r69/rustfetch/refs/heads/master/install.sh | bash
+    $ curl -sSL https://raw.githubusercontent.com/ZombieKill3r69/rustfetch/refs/heads/master/install.sh | bash
     ```
 2. **Run command in terminal**
     ```bash
-    rustfetch
+    $ rustfetch
     ```
 
 #### Manual
