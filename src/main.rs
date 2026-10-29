@@ -19,8 +19,8 @@ struct Info {
 
 fn main() {
 
-    let bytes_to_mib_divisor: u64 = 1024 * 1024;
-    let bytes_to_gib_divisor: u64 = 1024 * 1024 * 1024;
+    let bytes_to_mib_divisor: u64 = 1_024 * 1_024;
+    let bytes_to_gib_divisor: u64 = 1_024 * 1_024 * 1_024;
 
     let underline_char = "-";
 
@@ -38,8 +38,8 @@ fn main() {
         arch: System::cpu_arch(),
         kernel: System::kernel_version().unwrap_or("Unknown Kernel".to_string()),
         uptime: get_system_uptime(),
-        memory_used: sys.total_memory() / bytes_to_mib_divisor,
-        memory_total: sys.used_memory() / bytes_to_mib_divisor,
+        memory_used: sys.used_memory() / bytes_to_mib_divisor,
+        memory_total: sys.total_memory() / bytes_to_mib_divisor,
         storage_used: get_disk_info().1 / bytes_to_gib_divisor,
         storage_total: get_disk_info().0 / bytes_to_gib_divisor,
     };
