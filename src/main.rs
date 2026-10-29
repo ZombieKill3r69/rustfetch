@@ -11,10 +11,10 @@ struct Info {
     os_version:     String,
     arch:           String,
     kernel:         String,
-    memory_used:    u64,
-    memory_total:   u64,
-    storage_used:   u64,
-    storage_total:  u64,
+    memory_used:    u64, // These
+    memory_total:   u64, // Are
+    storage_used:   u64, // In
+    storage_total:  u64, // Bytes
 }
 
 fn main() {
@@ -54,6 +54,7 @@ fn main() {
 }
 
 fn get_system_uptime() -> (u64, u64, u64) {
+
     let uptime_seconds: u64 = System::uptime(); 
     
     return (
@@ -64,7 +65,9 @@ fn get_system_uptime() -> (u64, u64, u64) {
 }
 
 fn get_disk_info() -> (u64, u64) {
+
     let disks: Disks = Disks::new_with_refreshed_list();
+
     let mut total_space: u64 = 0;
     let mut used_space: u64 = 0;
     
@@ -81,7 +84,7 @@ fn get_disk_info() -> (u64, u64) {
 
 fn craft_bulk_print(stats: Info, line: String) {
 
-    let mut out = String::new();
+    let mut out: String = String::new();
 
     out.push_str(&format!("\x1b[32m{}\x1b[0m@\x1b[32m{}\x1b[0m\n", stats.username, stats.host));
     out.push_str(&format!("\x1b[32m{line}\n"));
