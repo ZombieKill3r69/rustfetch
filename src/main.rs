@@ -89,7 +89,7 @@ fn craft_bulk_print(stats: Info, line: String) {
     out.push_str(&format!("\x1b[32mOS      -\x1b[0m> {} {} {}\n", stats.os_name, stats.os_version, stats.arch));
     out.push_str(&format!("\x1b[32mKernel  -\x1b[0m> {}\n", stats.kernel));
     out.push_str(&format!("\x1b[32mMemory  -\x1b[0m> {}MiB / {}MiB\n", stats.memory_used, stats.memory_total));
-    out.push_str(&format!("\x1b[32mStorage -\x1b[0m> {}GiB / {}GiB\n", stats.storage_used, stats.storage_total));
+    out.push_str(&format!("\x1b[32mStorage -\x1b[0m> {}GiB / {}GiB", stats.storage_used, stats.storage_total));
 
     println!("{}", out);
 }
