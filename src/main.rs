@@ -40,8 +40,8 @@ fn main() {
         uptime: get_system_uptime(),
         memory_used: sys.total_memory() / bytes_to_mib_divisor,
         memory_total: sys.used_memory() / bytes_to_mib_divisor,
-        storage_used: get_disk_info().0 / bytes_to_gib_divisor,
-        storage_total: get_disk_info().1 / bytes_to_gib_divisor,
+        storage_used: get_disk_info().1 / bytes_to_gib_divisor,
+        storage_total: get_disk_info().0 / bytes_to_gib_divisor,
     };
 
     // Line
@@ -52,7 +52,6 @@ fn main() {
         .collect();
 
     // Output
-    // Title line and line break
     print_output(stats, line);
 }
 
@@ -83,11 +82,11 @@ fn get_disk_info() -> (u64, u64) {
 }
 
 fn print_output(stats: Info, line: String) {
-    println!("{}@{}",stats.username ,stats.host);
+    println!("{}@{}", stats.username, stats.host);
     println!("{line}");
     println!("Uptime: {}hours {}mins {}secs", stats.uptime.0, stats.uptime.1, stats.uptime.2);
-    println!("OS: {} {} {}",stats.os_name ,stats.os_version ,stats.arch);
+    println!("OS: {} {} {}", stats.os_name, stats.os_version, stats.arch);
     println!("Kernel: {}", stats.kernel);
-    println!("Memory: {}MiB / {}MiB", stats.memory_used ,stats.memory_total);
+    println!("Memory: {}MiB / {}MiB", stats.memory_used, stats.memory_total);
     println!("Storage: {}GiB / {}GiB", stats.storage_used, stats.storage_total);
 }
