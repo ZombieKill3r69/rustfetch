@@ -83,13 +83,13 @@ fn craft_bulk_print(stats: Info, line: String) {
 
     let mut out = String::new();
 
-    out.push_str(&format!("{}@{}\n", stats.username, stats.host));
-    out.push_str(&format!("{line}\n"));
-    out.push_str(&format!("Uptime: {} hours {} mins {} secs\n", stats.uptime.0, stats.uptime.1, stats.uptime.2));
-    out.push_str(&format!("OS: {} {} {}\n", stats.os_name, stats.os_version, stats.arch));
-    out.push_str(&format!("Kernel: {}\n", stats.kernel));
-    out.push_str(&format!("Memory: {}MiB / {}MiB\n", stats.memory_used, stats.memory_total));
-    out.push_str(&format!("Storage: {}GiB / {}GiB\n", stats.storage_used, stats.storage_total));
+    out.push_str(&format!("\x1b[32m{}\x1b[0m@\x1b[32m{}\x1b[0m\n", stats.username, stats.host));
+    out.push_str(&format!("\x1b[32m{line}\n"));
+    out.push_str(&format!("\x1b[32mUptime  -\x1b[0m> {} hours {} mins {} secs\n", stats.uptime.0, stats.uptime.1, stats.uptime.2));
+    out.push_str(&format!("\x1b[32mOS      -\x1b[0m> {} {} {}\n", stats.os_name, stats.os_version, stats.arch));
+    out.push_str(&format!("\x1b[32mKernel  -\x1b[0m> {}\n", stats.kernel));
+    out.push_str(&format!("\x1b[32mMemory  -\x1b[0m> {}MiB / {}MiB\n", stats.memory_used, stats.memory_total));
+    out.push_str(&format!("\x1b[32mStorage -\x1b[0m> {}GiB / {}GiB\n", stats.storage_used, stats.storage_total));
 
     println!("{}", out);
 }
