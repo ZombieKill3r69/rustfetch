@@ -1,4 +1,4 @@
-use std::{path::Path};
+use std::path::Path;
 use uzers::{get_current_uid, get_user_by_uid,};
 use sysinfo::{System, Disks,};
 use hostname;
@@ -46,13 +46,11 @@ fn main() {
 
     // Line
     let line: String = std::iter::repeat(underline_char)
-        .take(format!("{}@{}", stats.username, stats.host)
-            .chars()
-            .count())
+        .take(format!("{}@{}", stats.username, stats.host).chars().count())
         .collect();
 
     // Output
-    print_output(stats, line);
+    craft_bulk_print(stats, line);
 }
 
 fn get_system_uptime() -> (u64, u64, u64) {
@@ -81,12 +79,17 @@ fn get_disk_info() -> (u64, u64) {
     (total_space, used_space) // Return both values from one function for consiseness
 }
 
-fn print_output(stats: Info, line: String) {
-    println!("{}@{}", stats.username, stats.host);
-    println!("{line}");
-    println!("Uptime: {}hours {}mins {}secs", stats.uptime.0, stats.uptime.1, stats.uptime.2);
-    println!("OS: {} {} {}", stats.os_name, stats.os_version, stats.arch);
-    println!("Kernel: {}", stats.kernel);
-    println!("Memory: {}MiB / {}MiB", stats.memory_used, stats.memory_total);
-    println!("Storage: {}GiB / {}GiB", stats.storage_used, stats.storage_total);
+fn craft_bulk_print(stats: Info, line: String) {
+
+    let mut out = String::new();
+
+    out.push_str(&format!("{}@{}\n", stats.username, stats.host));
+    out.push_str(&format!("{line}\n"));
+    out.push_str(&format!("Uptime: {} hours {} mins {} secs\n", stats.uptime.0, stats.uptime.1, stats.uptime.2));
+    out.push_str(&format!("OS: {} {} {}\n", stats.os_name, stats.os_version, stats.arch));
+    out.push_str(&format!("Kernel: {}\n", stats.kernel));
+    out.push_str(&format!("Memory: {}MiB / {}MiB\n", stats.memory_used, stats.memory_total));
+    out.push_str(&format!("Storage: {}GiB / {}GiB\n", stats.storage_used, stats.storage_total));
+
+    println!("{}", out);
 }
