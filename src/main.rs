@@ -53,22 +53,16 @@ fn main() {
 
     // Output
     // Title line and line break
-    println!("{}@{}",stats.username ,stats.host);
-    println!("{line}");
-    println!("Uptime: {}hours {}mins {}secs", stats.uptime.0, stats.uptime.1, stats.uptime.2);
-    println!("OS: {} {} {}",stats.os_name ,stats.os_version ,stats.arch);
-    println!("Kernel: {}", stats.kernel);
-    println!("Memory: {}MiB / {}MiB", stats.memory_used ,stats.memory_total);
-    println!("Storage: {}GiB / {}GiB", stats.storage_used, stats.storage_total);
+    print_output(stats, line);
 }
 
 fn get_system_uptime() -> (u64, u64, u64) {
     let uptime_seconds: u64 = System::uptime(); 
     
     return (
-    uptime_seconds / 3600,         // Hours
-    (uptime_seconds % 3600) / 60,  // Mins
-    uptime_seconds % 60,           // Secs
+        uptime_seconds / 3600,         // Hours
+        (uptime_seconds % 3600) / 60,  // Mins
+        uptime_seconds % 60,           // Secs
     );
 }
 
@@ -76,7 +70,7 @@ fn get_disk_info() -> (u64, u64) {
     let disks: Disks = Disks::new_with_refreshed_list();
     let mut total_space: u64 = 0;
     let mut used_space: u64 = 0;
-
+    
     for disk in disks.list() {
         if disk.mount_point() == Path::new("/") { // Check if diskis root
             total_space = disk.total_space();
@@ -84,6 +78,16 @@ fn get_disk_info() -> (u64, u64) {
             break; // We dont care about anything but root here so we stop
         }
     }
-
+    
     (total_space, used_space) // Return both values from one function for consiseness
+}
+
+fn print_output(stats: Info, line: String) {
+    println!("{}@{}",stats.username ,stats.host);
+    println!("{line}");
+    println!("Uptime: {}hours {}mins {}secs", stats.uptime.0, stats.uptime.1, stats.uptime.2);
+    println!("OS: {} {} {}",stats.os_name ,stats.os_version ,stats.arch);
+    println!("Kernel: {}", stats.kernel);
+    println!("Memory: {}MiB / {}MiB", stats.memory_used ,stats.memory_total);
+    println!("Storage: {}GiB / {}GiB", stats.storage_used, stats.storage_total);
 }
