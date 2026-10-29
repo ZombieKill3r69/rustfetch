@@ -1,7 +1,21 @@
-use std::{mem::take, path::Path};
+use std::{path::Path};
 use uzers::{get_current_uid, get_user_by_uid,};
 use sysinfo::{System, Disks,};
 use hostname;
+
+struct Info {
+    username:       String,
+    host:           String,
+    uptime:         (u64, u64, u64), // Hours, mins, secs
+    os_name:        String,
+    os_version:     String,
+    arch:           String,
+    kernal:         String,
+    memory_used:    u64,
+    memory_total:   u64,
+    storage_used:   u64,
+    storage_total:  u64,
+}
 
 fn main() {
 
@@ -76,9 +90,9 @@ fn main() {
     // Title line and line break
     println!("{username}@{host}");
     println!("{line}");
-    println!("\x1b[32mUptime:\x1b[0m {}hours {}mins {}secs", uptime.0, uptime.1, uptime.2);
-    println!("\x1b[32mOS:\x1b[0m {os_name} {os_version} {architecture}");
-    println!("\x1b[32mKernel:\x1b[0m {kernel}");
-    println!("\x1b[32mMemory:\x1b[0m {memory_used}MiB / {memory_total}MiB");
-    println!("\x1b[32mStorage:\x1b[0m {storage_used}GiB / {storage_total}GiB");
+    println!("Uptime: {}hours {}mins {}secs", uptime.0, uptime.1, uptime.2);
+    println!("OS: {os_name} {os_version} {architecture}");
+    println!("Kernel: {kernel}");
+    println!("Memory: {memory_used}MiB / {memory_total}MiB");
+    println!("Storage: {storage_used}GiB / {storage_total}GiB");
 }
